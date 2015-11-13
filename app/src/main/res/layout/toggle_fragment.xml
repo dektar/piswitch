@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ToggleButton
+        android:id="@+id/toggle_button"
+        android:text="@string/button_text_turn_on"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/button_color_turn_on"
+        android:textSize="@dimen/button_text_size"
+        />
+
+</RelativeLayout>

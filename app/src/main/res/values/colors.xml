@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="button_color_turn_on">#EE8888</color>
+    <color name="button_color_turn_off">#66EE66</color>
+    <color name="button_color_loading">#CCCCCC</color>
+</resources>

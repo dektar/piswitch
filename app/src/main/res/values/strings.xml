@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Pi Switch</string>
+    <string name="action_settings">Settings</string>
+    <string name="button_text_turn_on">Turn On</string>
+    <string name="button_text_turn_off">Turn Off</string>
+    <string name="button_text_loading">Loading...</string>
+    <string name="pref_internal_url">Internal URL?</string>
+    <string name="pref_internal_url_summary">Whether to use an internal or external URL for your Pi</string>
+    <string name="pref_internal_url_id">PREF_INTERNAL_URL</string>
+</resources>

@@ -1,0 +1,6 @@
+local.properties
+*~
+out
+app/build/
+volley/
+build/
