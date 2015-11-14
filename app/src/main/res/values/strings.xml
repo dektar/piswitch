@@ -4,7 +4,16 @@
     <string name="button_text_turn_on">Turn On</string>
     <string name="button_text_turn_off">Turn Off</string>
     <string name="button_text_loading">Loading...</string>
-    <string name="pref_internal_url">Internal URL?</string>
-    <string name="pref_internal_url_summary">Whether to use an internal or external URL for your Pi</string>
+
+    <string name="pref_which_url_id">PREF_WHICH_URL</string>
+    <string name="pref_which_url">Use internal URL?</string>
+    <string name="pref_which_url_summary">Whether to use an internal or external URL for your Pi</string>
     <string name="pref_internal_url_id">PREF_INTERNAL_URL</string>
+    <string name="pref_internal_url">Internal URL</string>
+    <string name="pref_internal_url_summary">The internal URL to your Pi</string>
+    <string name="pref_external_url_id">PREF_EXTERNAL_URL</string>
+    <string name="pref_external_url">External URL</string>
+    <string name="pref_external_url_summary">The external URL to your Pi</string>
+    <string name="default_internal_url">http://10.1.10.12</string>
+    <string name="default_external_url">http://pi.dektar.com</string>
 </resources>

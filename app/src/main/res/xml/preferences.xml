@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
+        android:key="@string/pref_which_url_id"
+        android:title="@string/pref_which_url"
+        android:summary="@string/pref_which_url_summary"
+        android:defaultValue="true"
+        />
+    <EditTextPreference
         android:key="@string/pref_internal_url_id"
         android:title="@string/pref_internal_url"
         android:summary="@string/pref_internal_url_summary"
-        android:defaultValue="true" />
+        android:defaultValue="@string/default_internal_url"
+        />
+    <EditTextPreference
+        android:key="@string/pref_external_url_id"
+        android:title="@string/pref_external_url"
+        android:summary="@string/pref_external_url_summary"
+        android:defaultValue="@string/default_external_url"
+        />
 </PreferenceScreen>

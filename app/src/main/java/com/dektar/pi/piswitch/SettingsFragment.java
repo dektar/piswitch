@@ -1,5 +1,6 @@
 package com.dektar.pi.piswitch;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 

@@ -7,7 +7,7 @@ import android.preference.PreferenceActivity;
 /**
  * Settings.
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

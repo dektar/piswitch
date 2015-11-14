@@ -19,8 +19,6 @@ import com.android.volley.toolbox.Volley;
  * Toggle fragment.
  */
 public class ToggleFragment extends android.support.v4.app.Fragment {
-    private static final String INTERNAL_URL = "http://10.1.10.12";
-    private static final String EXTERNAL_URL = "http://pi.dektar.com";
     private static final String HTTP_ON = "cgi-bin/on.py";
     private static final String HTTP_OFF = "cgi-bin/off.py";
     private static final String HTTP_STATUS = "status.php";
@@ -31,6 +29,10 @@ public class ToggleFragment extends android.support.v4.app.Fragment {
     private boolean isCurrentlyOn;
     private RequestQueue mRequestQueue;
     private String mUrlBase;
+
+    private Boolean mIsInternalIp;
+    private String mInternalUrl;
+    private String mExternalUrl;
 
     private boolean mTryTurningOn = false;
     private boolean mTryTurningOff = false;
@@ -49,10 +51,7 @@ public class ToggleFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.toggle_fragment, container, false);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        boolean isInternalIp = sharedPref.getBoolean(
-                getResources().getString(R.string.pref_internal_url_id), true);
-        mUrlBase = isInternalIp ? INTERNAL_URL : EXTERNAL_URL;
+        loadPreferences();
 
         toggleButton = (ToggleButton) rootView.findViewById(R.id.toggle_button);
         toggleButton.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +75,18 @@ public class ToggleFragment extends android.support.v4.app.Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        loadPreferences();
+        sendStatusRequest();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -117,6 +128,7 @@ public class ToggleFragment extends android.support.v4.app.Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                resetButtonUi();
                 Log.d("Error", error.getMessage());
             }
         });
@@ -148,6 +160,20 @@ public class ToggleFragment extends android.support.v4.app.Fragment {
             return true;
         }
         return false;
+    }
+
+    private void loadPreferences() {
+        final SharedPreferences sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mIsInternalIp = sharedPref.getBoolean(
+                getResources().getString(R.string.pref_which_url_id), true);
+        mInternalUrl = sharedPref.getString(
+                getResources().getString(R.string.pref_internal_url_id),
+                getResources().getString(R.string.default_internal_url));
+        mExternalUrl = sharedPref.getString(
+                getResources().getString(R.string.pref_external_url_id),
+                getResources().getString(R.string.default_external_url));
+        mUrlBase = mIsInternalIp ? mInternalUrl : mExternalUrl;
     }
 
 }

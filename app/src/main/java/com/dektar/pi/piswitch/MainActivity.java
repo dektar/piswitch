@@ -15,11 +15,12 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         ToggleFragment toggleFragment = new ToggleFragment();
-        fragmentTransaction.add(R.id.main_content, toggleFragment);
+        fragmentTransaction.replace(android.R.id.content, toggleFragment);
         fragmentTransaction.commit();
 
         Intent intent = getIntent();
@@ -34,7 +35,6 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
-        setContentView(R.layout.activity_main);
     }
 
     @Override
