@@ -45,6 +45,7 @@ public class PiController {
         mRequestQueue.cancelAll(TAG);
         mRequestQueue.stop();
         mRequestQueue = null;
+        mStatusListener = null;
     }
 
     public void toggle(boolean turnOn) {
@@ -54,6 +55,10 @@ public class PiController {
     public void refreshAll(Context context) {
         loadPreferences(context);
         updateStatus();
+    }
+
+    public void refreshOptions(Context context) {
+        loadPreferences(context);
     }
 
     public void updateStatus() {
