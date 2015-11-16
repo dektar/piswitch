@@ -17,4 +17,5 @@
             android:textColor="@color/button_color_turn_on"
             android:textAllCaps="false"
             />
+
 </LinearLayout>
