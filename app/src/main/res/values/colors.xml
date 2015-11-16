@@ -3,4 +3,9 @@
     <color name="button_color_turn_on">#EE8888</color>
     <color name="button_color_turn_off">#66EE66</color>
     <color name="button_color_loading">#CCCCCC</color>
+
+    <color name="widget_background_color">#222222</color>
+    <color name="widget_indicator_on">#48BCEB</color>
+    <color name="widget_indicator_off">#656565</color>
+    <color name="widget_indicator_error">#D10600</color>
 </resources>

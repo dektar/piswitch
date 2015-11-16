@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin"
+    android:layout_margin="@dimen/widget_margin"
     android:orientation="vertical"
+    android:background="@color/widget_background_color"
     >
 
         <TextView
             android:id="@+id/widget_toggle_button"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/widget_indicator"
             android:text="@string/button_text_turn_on"
-            android:background="@android:color/darker_gray"
-            android:textColor="@color/button_color_turn_on"
+            android:textColor="@android:color/white"
             android:textAllCaps="false"
+            android:textAlignment="center"
             />
 
-</LinearLayout>
+        <FrameLayout
+            android:id="@id/widget_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/widget_indicator_height"
+            android:background="@color/widget_indicator_on"
+            android:layout_margin="@dimen/widget_indicator_margin"
+            android:layout_alignParentBottom="true"
+            />
+
+</RelativeLayout>
