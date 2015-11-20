@@ -6,6 +6,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -13,20 +15,24 @@ import android.widget.RemoteViews;
  */
 public class PiSwitchWidgetProvider extends AppWidgetProvider {
 
+    private static final String ACTION_REFRESH = "action_refresh";
+
     private static final String HAS_NO_DATA_KEY = "no_data";
     private static final String IS_ON_KEY = "is_on";
     private static final String INTERNAL_TEMP_KEY = "internal_temp";
     private static final String EXTERNAL_TEMP_KEY = "external_temp";
 
-    // If not button_pushed or pi_controller_status, this was an auto onUpdate.
+    // Possible intents: auto update, response from Pi, light button pushed, or refresh pushed.
     private static final String BUTTON_PUSHED_KEY = "button_pushed_intent";
+    private static final String REFRESH_PUSHED_KEY = "refresh_pushed_intent";
     private static final String PI_CONTROLLER_STATUS_KEY = "pi_controller_status_intent";
 
     private boolean mIsOn;
     private double mInternalTemp;
     private double mExternalTemp;
     private boolean mHasNoData;
-    private boolean mButtonClickedIntent;
+    private boolean mLightButtonClickedIntent;
+    private boolean mRefreshButtonClickedIntent;
     private boolean mPiControllerIntent;
     private PiController mPiController;
 
@@ -36,10 +42,17 @@ public class PiSwitchWidgetProvider extends AppWidgetProvider {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                 R.layout.app_widget);
         initializePiController(context, appWidgetIds);
-        if (mButtonClickedIntent) {
+        if (mLightButtonClickedIntent) {
             // The button was just clicked. Start the request for toggle & status.
             mPiController.toggle(!mIsOn);
-        } else if (!mPiControllerIntent) {
+            setRemoteViewsPending(context, remoteViews);
+            clearLightPendingIntent(remoteViews);
+        } else if (mRefreshButtonClickedIntent) {
+            mPiController.refreshAll(context);
+            setRemoteViewsPending(context, remoteViews);
+        } else if (mPiControllerIntent || mHasNoData) {
+            setRemoteViewsUi(mIsOn, mInternalTemp, mExternalTemp, context, remoteViews);
+        } else {
             // If the intent wasn't the button click or the response from PiController,
             // then it is time to refresh the data.
             mPiController.refreshAll(context);
@@ -47,25 +60,9 @@ public class PiSwitchWidgetProvider extends AppWidgetProvider {
 
         for (int i = 0; i < size; i++) {
             int widgetId = appWidgetIds[i];
-            if (mButtonClickedIntent) {
-                setRemoteViewsPending(context, remoteViews);
-            } else {
-                if (mPiControllerIntent || mHasNoData) {
-                    setRemoteViewsUi(mIsOn, mInternalTemp, mExternalTemp, context, remoteViews);
-                } else  {
-                    // This is an update from a status request, or the Pi had no data.
-                    // Reset the button click intent.
-                    setRemoteViewsError(context, remoteViews);
-                }
-                Intent clickIntent = new Intent(context, PiSwitchWidgetProvider.class);
-                clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-                clickIntent.putExtra(BUTTON_PUSHED_KEY, true); // button push intent
-                clickIntent.putExtra(PI_CONTROLLER_STATUS_KEY, false);
-                clickIntent.putExtra(IS_ON_KEY, mIsOn);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                        0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                remoteViews.setOnClickPendingIntent(R.id.widget_toggle_button, pendingIntent);
+            createRefreshIntent(context, appWidgetIds, remoteViews);
+            if (!mLightButtonClickedIntent) {
+                resetLightPendingIntent(context, appWidgetIds, remoteViews);
             }
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
@@ -77,6 +74,7 @@ public class PiSwitchWidgetProvider extends AppWidgetProvider {
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         updateIntent.putExtra(PI_CONTROLLER_STATUS_KEY, true);
         updateIntent.putExtra(BUTTON_PUSHED_KEY, false);
+        updateIntent.putExtra(REFRESH_PUSHED_KEY, false);
         if (mPiController == null) {
             mPiController =
                     new PiController(context, new PiController.OnPiStatusResponseListener() {
@@ -130,9 +128,48 @@ public class PiSwitchWidgetProvider extends AppWidgetProvider {
                 String.format(res.getString(R.string.temp_string), externalTemp));
     }
 
+    private void clearLightPendingIntent(RemoteViews remoteViews) {
+        remoteViews.setOnClickPendingIntent(R.id.widget_toggle_button, null);
+    }
+
+    private void resetLightPendingIntent(Context context, int[] appWidgetIds,
+                                         RemoteViews remoteViews) {
+        Intent lightClickIntent = new Intent(context, PiSwitchWidgetProvider.class);
+        lightClickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        lightClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        lightClickIntent.putExtra(BUTTON_PUSHED_KEY, true); // button push intent
+        lightClickIntent.putExtra(PI_CONTROLLER_STATUS_KEY, false);
+        lightClickIntent.putExtra(REFRESH_PUSHED_KEY, false);
+        lightClickIntent.putExtra(IS_ON_KEY, mIsOn);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                0, lightClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.widget_toggle_button, pendingIntent);
+    }
+
+    private void createRefreshIntent(Context context, int[] appWidgetIds,
+                                     RemoteViews remoteViews) {
+        Intent refreshIntent = new Intent(context, PiSwitchWidgetProvider.class);
+        refreshIntent.setAction(ACTION_REFRESH);
+        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        refreshIntent.putExtra(REFRESH_PUSHED_KEY, true);
+        refreshIntent.putExtra(PI_CONTROLLER_STATUS_KEY, false);
+        refreshIntent.putExtra(BUTTON_PUSHED_KEY, false);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, pendingIntent);
+    }
+
     @Override
     public void onReceive(final Context context, Intent intent) {
-        mButtonClickedIntent = intent.getBooleanExtra(BUTTON_PUSHED_KEY, false);
+        Log.d("intent action", intent.getAction());
+        if (TextUtils.equals(intent.getAction(), ACTION_REFRESH)) {
+            mRefreshButtonClickedIntent = true;
+            mLightButtonClickedIntent = false;
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        } else {
+            mRefreshButtonClickedIntent = false;
+            mLightButtonClickedIntent = intent.getBooleanExtra(BUTTON_PUSHED_KEY, false);
+        }
         mPiControllerIntent = intent.getBooleanExtra(PI_CONTROLLER_STATUS_KEY, false);
         mHasNoData = intent.getBooleanExtra(HAS_NO_DATA_KEY, true);
         mIsOn = intent.getBooleanExtra(IS_ON_KEY, false);

@@ -9,4 +9,5 @@
     <color name="widget_indicator_off">#656565</color>
     <color name="widget_indicator_loading">#FFFF33</color>
     <color name="widget_indicator_error">#D10600</color>
+    <color name="widget_divider_color">#353535</color>
 </resources>
