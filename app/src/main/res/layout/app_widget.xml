@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/widget_margin"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:background="@color/widget_background_color"
     >
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/widget_internal_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+            />
+        <TextView
+            android:id="@+id/widget_external_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/widget_internal_temp"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_weight=".8"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+
 
         <TextView
             android:id="@+id/widget_toggle_button"
@@ -29,4 +61,6 @@
             android:layout_alignParentBottom="true"
             />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

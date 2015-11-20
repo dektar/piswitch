@@ -53,7 +53,7 @@ public class ToggleFragment extends android.support.v4.app.Fragment {
 
         statusListener = new PiController.OnPiStatusResponseListener() {
             @Override
-            public void onStatus(boolean isOn) {
+            public void onStatus(boolean isOn, double insideTemp, double outsideTemp) {
                 mIsCurrentlyOn = isOn;
                 updateButtonState();
             }

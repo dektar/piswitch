@@ -4,20 +4,26 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Class for communicating with and controlling the Pi.
  */
 public class PiController {
     public interface OnPiStatusResponseListener {
-        void onStatus(boolean isOn);
+        void onStatus(boolean isOn, double insideTemp, double outsideTemp);
         void onError();
     }
 
@@ -65,12 +71,19 @@ public class PiController {
         String url = mUrlBase + "/" + HTTP_STATUS;
 
         // Request a string response from the provided URL.
-        StringRequest statusRequest = new StringRequest(com.android.volley.Request.Method.GET, url,
-                new Response.Listener<String>() {
+        JsonObjectRequest statusRequest = new JsonObjectRequest(
+                com.android.volley.Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        boolean isCurrentlyOn = parseResponse(response);
-                        mStatusListener.onStatus(isCurrentlyOn);
+                    public void onResponse(JSONObject response) {
+                        try {
+                            boolean isCurrentlyOn = getLampState(response);
+                            double insideTemp = getInsideTemp(response);
+                            double outsideTemp = getOutsideTemp(response);
+                            mStatusListener.onStatus(isCurrentlyOn, insideTemp, outsideTemp);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -102,12 +115,32 @@ public class PiController {
         mRequestQueue.add(request);
     }
 
-    private boolean parseResponse(String response) {
-        // TODO: Get JSON and parse that instead!
-        if (response.contains("\"lamps\":[{\"id\":\"1\",\"name\":\"living room\",\"state\":\"1\"}")) {
-            return true;
+    private boolean getLampState(JSONObject response) throws JSONException {
+        JSONArray lamps = response.getJSONArray("lamps");
+        for (int i = 0; i < lamps.length(); i++) {
+            JSONObject lamp = lamps.getJSONObject(i);
+            if (TextUtils.equals(lamp.getString("name"), "living room")) {
+                return lamp.getInt("state") == 1;
+            }
         }
         return false;
+    }
+
+    private double getInsideTemp(JSONObject response) throws JSONException {
+        return getTemp(response, "current_temp");
+    }
+
+    private double getOutsideTemp(JSONObject response) throws JSONException {
+        return getTemp(response, "ext_temp");
+    }
+
+    private double getTemp(JSONObject response, String tempType) throws JSONException {
+        JSONArray heating = response.getJSONArray("heating");
+        for (int i = 0; i < heating.length(); i++) {
+            JSONObject state = heating.getJSONObject(i);
+            return state.getDouble(tempType);
+        }
+        return -1;
     }
 
     private void loadPreferences(Context context) {
