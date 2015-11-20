@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/widget_margin"
     android:orientation="horizontal"
@@ -9,66 +9,64 @@
     >
 
     <RelativeLayout
-        android:layout_weight="1"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/widget_temp_layout_width"
         android:layout_height="match_parent"
-        android:padding="4dp"
+        android:padding="@dimen/widget_temp_line_margin"
         >
 
         <ImageView
             android:id="@+id/home_icon"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/widget_temp_line_height"
             android:src="@drawable/ic_home_white_18dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:alpha="180"
+            android:layout_marginRight="@dimen/widget_temp_line_margin"
             />
 
         <ImageView
             android:id="@+id/outside_icon"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/widget_temp_line_height"
             android:src="@drawable/ic_landscape_white_18dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/home_icon"
             android:alpha="180"
+            android:layout_marginRight="@dimen/widget_temp_line_margin"
             />
 
         <TextView
             android:id="@+id/widget_internal_temp"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/widget_temp_line_height"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/home_icon"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
-            android:textAlignment="center"
             />
 
         <TextView
             android:id="@+id/widget_external_temp"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/widget_temp_line_height"
             android:layout_below="@id/widget_internal_temp"
             android:layout_toRightOf="@id/outside_icon"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
-            android:textAlignment="center"
             />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_weight=".66"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/widget_light_layout_width"
         android:layout_height="match_parent">
 
 
         <ImageView
             android:id="@+id/widget_toggle_button"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="@dimen/widget_light_layout_width"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_above="@+id/widget_indicator"
             android:scaleType="center"
