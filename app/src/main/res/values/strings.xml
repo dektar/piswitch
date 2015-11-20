@@ -17,6 +17,5 @@
     <string name="default_internal_url">http://10.1.10.12</string>
     <string name="default_external_url">http://pi.dektar.com</string>
 
-    <string name="external_temp_string">in: %1.1f\u00B0</string>
-    <string name="internal_temp_string">out: %1.1f\u00B0</string>
+    <string name="temp_string">%1.1f\u00B0</string>
 </resources>

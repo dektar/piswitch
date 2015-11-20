@@ -7,5 +7,6 @@
     <color name="widget_background_color">#222222</color>
     <color name="widget_indicator_on">#48BCEB</color>
     <color name="widget_indicator_off">#656565</color>
+    <color name="widget_indicator_loading">#FFFF33</color>
     <color name="widget_indicator_error">#D10600</color>
 </resources>

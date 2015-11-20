@@ -55,7 +55,7 @@ public class PiSwitchWidgetProvider extends AppWidgetProvider {
                 } else  {
                     // This is an update from a status request, or the Pi had no data.
                     // Reset the button click intent.
-                    setRemoteViewsPending(context, remoteViews);
+                    setRemoteViewsError(context, remoteViews);
                 }
                 Intent clickIntent = new Intent(context, PiSwitchWidgetProvider.class);
                 clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -102,8 +102,12 @@ public class PiSwitchWidgetProvider extends AppWidgetProvider {
 
     private void setRemoteViewsPending(Context context, RemoteViews remoteViews) {
         Resources res = context.getResources();
-        remoteViews.setTextViewText(R.id.widget_toggle_button,
-                res.getString(R.string.button_text_loading));
+        remoteViews.setInt(R.id.widget_indicator, "setBackgroundColor",
+                res.getColor(R.color.widget_indicator_loading));
+    }
+
+    private void setRemoteViewsError(Context context, RemoteViews remoteViews) {
+        Resources res = context.getResources();
         remoteViews.setInt(R.id.widget_indicator, "setBackgroundColor",
                 res.getColor(R.color.widget_indicator_error));
     }
@@ -112,20 +116,18 @@ public class PiSwitchWidgetProvider extends AppWidgetProvider {
                                   Context context, RemoteViews remoteViews) {
         Resources res = context.getResources();
         if (isOn) {
-            remoteViews.setTextViewText(R.id.widget_toggle_button,
-                    res.getString(R.string.button_text_turn_off));
+            remoteViews.setInt(R.id.widget_toggle_button, "setAlpha", 255);
             remoteViews.setInt(R.id.widget_indicator, "setBackgroundColor",
                     res.getColor(R.color.widget_indicator_on));
         } else {
-            remoteViews.setTextViewText(R.id.widget_toggle_button,
-                    res.getString(R.string.button_text_turn_on));
+            remoteViews.setInt(R.id.widget_toggle_button, "setAlpha", 100);
             remoteViews.setInt(R.id.widget_indicator, "setBackgroundColor",
                     res.getColor(R.color.widget_indicator_off));
         }
         remoteViews.setTextViewText(R.id.widget_internal_temp,
-                String.format(res.getString(R.string.external_temp_string), internalTemp));
+                String.format(res.getString(R.string.temp_string), internalTemp));
         remoteViews.setTextViewText(R.id.widget_external_temp,
-                String.format(res.getString(R.string.internal_temp_string), externalTemp));
+                String.format(res.getString(R.string.temp_string), externalTemp));
     }
 
     @Override

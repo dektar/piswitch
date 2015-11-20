@@ -11,22 +11,47 @@
     <RelativeLayout
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        >
+
+        <ImageView
+            android:id="@+id/home_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_home_white_18dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:alpha="180"
+            />
+
+        <ImageView
+            android:id="@+id/outside_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_landscape_white_18dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/home_icon"
+            android:alpha="180"
+            />
 
         <TextView
             android:id="@+id/widget_internal_temp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/home_icon"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
             android:textAlignment="center"
             />
+
         <TextView
             android:id="@+id/widget_external_temp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_below="@id/widget_internal_temp"
+            android:layout_toRightOf="@id/outside_icon"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
             android:textAlignment="center"
@@ -35,21 +60,19 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_weight=".8"
+        android:layout_weight=".66"
         android:layout_width="0dp"
         android:layout_height="match_parent">
 
 
-        <TextView
+        <ImageView
             android:id="@+id/widget_toggle_button"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_alignParentTop="true"
             android:layout_above="@+id/widget_indicator"
-            android:text="@string/button_text_turn_on"
-            android:textColor="@android:color/white"
-            android:textAllCaps="false"
-            android:textAlignment="center"
+            android:scaleType="center"
+            android:src="@drawable/ic_lightbulb_outline_white_24dp"
             />
 
         <FrameLayout
